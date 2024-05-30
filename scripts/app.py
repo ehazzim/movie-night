@@ -15,11 +15,12 @@ data = pd.read_csv('./data/movielens_dataset.csv')
 def index():
     return render_template('index.html')
 
-@app.route('/recommend', method=['GET'])
+@app.route('/recommend', methods=['GET'])
 def recommend():
     user_id = int(request.args.get('user_id'))
     recommendations = get_movie_reco(model, user_id, data)
-    return jsonify(recommendations.to_dict(orient='records'))
+    recommendations_list = recommendations[['movieId', 'est_rating']].to_dict(orient='records')
+    return render_template('index.html', recommendations=recommendations_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
