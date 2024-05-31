@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <h1>Movie Recommendation</h1>
+        <h1>Movie Recommendation System</h1>
     </header>
     <div class="container">
         <form action="/recommend" method="get">
@@ -19,7 +19,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>Movie ID</th>
+                    <th>Movie Title</th>
                     <th>Estimated Rating</th>
                 </tr>
             </thead>
@@ -27,7 +27,7 @@
                 {% if recommendations %}
                     {% for rec in recommendations %}
                         <tr>
-                            <td>{{ rec.movieId }}</td>
+                            <td>{{ rec.title }}</td>
                             <td>{{ rec.est_rating }}</td>
                         </tr>
                     {% endfor %}
@@ -36,7 +36,7 @@
         </table>
     </div>
     <footer>
-        &copy; Movie Recommendation
+        &copy; 2024 Movie Recommendation System
     </footer>
 </body>
 </html>

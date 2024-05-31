@@ -1,15 +1,18 @@
-def get_movie_reco(model, user_id, data, top_n=10):
-    user_ratings = data[data['userID'] == user_id]
-    user_unrated_movies = data[~data['movieID'].isin(user_ratings['movieID'])]
-    user_unrated_movies['est_rating'] = user_unrated_movies['movieID'].apply(lambda x: model.predict(user_id, x).est)
+import pandas as pd
+
+def get_movie_recommendations(model, user_id, ratings, movies, top_n=10):
+    user_ratings = ratings[ratings['userId'] == user_id]
+    user_unrated_movies = movies[~movies['movieId'].isin(user_ratings['movieId'])]
+    user_unrated_movies['est_rating'] = user_unrated_movies['movieId'].apply(lambda x: model.predict(user_id, x).est)
     recommendations = user_unrated_movies.sort_values('est_rating', ascending=False).head(top_n)
+    recommendations = recommendations.merge(movies, on='movieId')[['movieId', 'title', 'est_rating']]
     return recommendations
 
 if __name__ == "__main__":
-    from data_preprocessing import load_preprocess_data
-    from model_building import build_train_model
-    dataset = load_preprocess_data('../data/movielens_dataset.csv')
-    model = build_train_model(dataset)
-    user_id = 1 # example
-    recommendations = get_movie_reco(model, user_id, dataset.df)
+    from data_preprocessing import load_and_preprocess_data
+    from model_building import build_and_train_model
+    dataset, movies, ratings, tags, links = load_and_preprocess_data()
+    model = build_and_train_model(dataset)
+    user_id = 1  # Example user
+    recommendations = get_movie_recommendations(model, user_id, ratings, movies)
     print(recommendations)
